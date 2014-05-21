@@ -1,10 +1,23 @@
-*.class
-
-# Package Files #
-*.jar
-*.ear
+# common ignores
+.classpath
 .project
 .settings
-.classpath
-target
+.idea
 bin
+target
+*~
+*~bak
+*-bak
+*.bak
+*-new
+*.rej
+*.orig
+.DS_Store
+.pydevproject
+*.pyc
+*.iml
+*.ipr
+*.iws
+*.gpd.*
+*cpJar*
+dependency-tree.log
