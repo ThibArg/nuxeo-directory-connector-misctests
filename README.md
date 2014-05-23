@@ -7,6 +7,24 @@ This is fork of [nuxeo-directory-connector](https://github.com/tiry/nuxeo-direct
 
 Adding some examples and, hopefully, explanations.
 
+**Important #2**: You need the `jersey` client installed in Nuxeo, if it is not already done. See below, "Trouble Shooting".
+
+### Building the Plugin - Using Eclipse
+
+Assuming `maven` (at least version 3.2.1) is configured and installed:
+```bash
+cd /path/to/nuxeo-directory-connector-misctests
+mvn package
+```
+The .jar is in `{nuxeo-directory-connector-misctests}/target/`
+
+To import it in Eclipse, first ask maven to do build it for Eclipse...
+```bash
+mvn eclipse:eclipse
+```
+...then, in Eclipse, choose "File" -> "Import Existing project" and follow the instruction.
+
+
 ### The `NuxeoDemoComInMemoryConnector` DirectoryConnector
 
 This directory connects to demo.nuxeo.com and fetches documents which contain "nuxeo" (fulltext search).
@@ -72,7 +90,12 @@ The class is commented, so you should find explanations in the code, but there i
 * Enter "directoryName" as the key and the name of you directory as the value (in this example, "demoNuxeoComDocuments")
 * (save)
 
-That's all :-)
+##### Trouble Shooting
+
+The connector requests the `jersey` library to be installed nuxeo side (it uses it to connect to the WebService). If you test it without this library installed, you will have a "ClassNotFound" error. Thanks to `maven` when you compiled the plugin, the `jersey` library was downloaded (since it is required to compile), so you can copy it to nuxeo. It is located in a directory inside the `.M2` directory which itself is much likely at the first level of you user folder: `~/.m2/repository/com/sun/jersey/jersey-client/1.17.1/jersey-client-1.17.1.jar`. So, you stop nuxeo server, copy `jersey-client-1.17.1.jar` to `nxserver/lib` and restart the server.
+
+
+##### That's all :-)
 
 (I like saying "that's all after spending quite some time building and explaining the thing :-) :-))
 
