@@ -39,22 +39,22 @@ The class is commented, so you should find explanations in the code, but there i
   * Deduce the URL to call
   * Deduce the mapping that must be done
   * In our example, the JSON returned by the query contains an `entries` property, which is an array of documents. Our custom class extracts this property. Then, for each document, we have `uid` and `title`:
-```
+<pre>
 {
-  "entity-type": "documents",
-  . . .
-  "entries": [ {
-      "entity-type": "document"
-      "repository": "default"
-      "uid": "2e668ca7-c7af-4489-9de3-045118688649"
-      "title": "The title"
-      . . .
-    },
-      . . .
-  ],
-  . . .
+  "entity-type": "documents",
+  . . .
+  "entries": [ {
+    "entity-type": "document"
+    "repository": "default"
+    "<b>uid</b>": "2e668ca7-c7af-4489-9de3-045118688649"
+    "<b>title</b>": "The title"
+    . . .
+    },
+    . . .
+  ],
+  . . .
 }
-```
+</pre>
 
 * Create a class wich extends `JsonInMemoryDirectoryConnector`, and overrides the following methods:
   * `extractResult(JsonNode responseAsJson)`: You must here return the node which contains an array of your results (`"entries"` in our example)
