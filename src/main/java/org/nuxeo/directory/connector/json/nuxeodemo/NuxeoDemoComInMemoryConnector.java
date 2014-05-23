@@ -18,12 +18,11 @@ import com.sun.jersey.api.client.WebResource;
 /*
  * In this example, we connect to a hard coded REST URL, defined in
  * OSGI-INF/miscDirectoryConnectorsContrib.xml. This is why we are
- * using the JsonInMemoryDirectoryConnector. BAsically what happens
+ * using the JsonInMemoryDirectoryConnector. Basically what happens
  * is:
  *    - The query is done once, and gets all the results.
- *      NOTE: In this example, we in,crease the default pageSize queryParameter
+ *      NOTE: In this example, we increase the default pageSize queryParameter
  *      so we fetch more elements than the default (50). This is done in call(url).
- *
  *
  *    - We override the call() method to handle authorization.
  *
@@ -57,8 +56,6 @@ public class NuxeoDemoComInMemoryConnector extends
 
     @Override
     protected JsonNode call(String url) {
-
-        log.warn("COUCOUCOCUOCUOCUOU");
 
         WebResource webResource = client.resource(url + "&pageSize=" + kPAGE_SIZE);
         ClientResponse response = null;

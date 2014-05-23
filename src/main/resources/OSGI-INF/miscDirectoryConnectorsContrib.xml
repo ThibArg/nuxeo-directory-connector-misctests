@@ -26,8 +26,8 @@
     </directory>
     
     <!-- The "demoNuxeoComDocuments" directory
-  		 Connects to demo.nuxeo.com gets documents whose fulltext contains 'nuxeo'. As the
-  		 connector used i the "inMemory" connector, the request is done once for all.
+  		 Connects to demo.nuxeo.com and gets documents whose fulltext contains 'nuxeo'.
+  		 As the connector used is the "inMemory" connector, the request is done once for all.
   		 
   		 Here, we must handle the vocavulary's id field and map it to the Nuxeo
   		 Document's UUID. We are doing a REST request fetching a list of documents,
