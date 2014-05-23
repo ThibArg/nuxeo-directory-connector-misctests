@@ -9,7 +9,7 @@ Adding some examples and, hopefully, explanations.
 
 ### The `NuxeoDemoComInMemoryConnector` DirectoryConnector
 
-This directory connects to demo.nuxeo.com and fetches documents which contains "nuxeo". It is a fulltext search.
+This directory connects to demo.nuxeo.com and fetches documents which contain "nuxeo" (fulltext search).
 
 It extends `JsonInMemoryDirectoryConnector`, which means basically:
 * There is a _single_ call to the REST service
@@ -18,15 +18,17 @@ It extends `JsonInMemoryDirectoryConnector`, which means basically:
 * It maps the result to the `entries` field of the JSON result. This field contains an array with all the found documents
 * Then, when the user enters something in the suggestion widget (bound to this directory), the internal query is done on the _pre-fetched_ data, so basically, we loop through the result (mapped to `entries`), and for each entry, we check if the `title` field contains the value.
 
-The class is commented, so you should find explanations in the code, but there is one other point which requests a bit more explanations: **We need to contribute an extension point, declaring this directory**, so nuxeo can use it. This is done in the `OSGI-INF/miscDirectoryConnectorsContrib.xml` file (which also contains comments):
+The class is commented, so you should find explanations in the code, but there is something which may request a bit more explanations: **We need to contribute an extension point to declare this directory**, so nuxeo can use it. This is done in the `OSGI-INF/miscDirectoryConnectorsContrib.xml` file (which also contains comments):
 
 * A new directory is declared, named "demoNuxeoComDocuments"
 * This directory:
   * Uses the `vocabulary` schema, which is declared in the `resources/schemas` folder
   * Declares the class to be used to handle the vocabulary: Our `NuxeoDemoComInMemoryConnector` class
-  * Declares and maps the appropriate mapping between:
+  * Declares the mapping between:
     * The fields used in the `vocabulary` schema (`ìd` and `label`)
     * And the JSON properties received after the call to the service (`uid` and `title`)
+    * (see below the JSON returned by demo.nuxeo.com)
+
   * Defines the URL to use: `http://demo.nuxeo.com/nuxeo/site/api/v1/path///@search?fullText=nuxeo`
     * This URL will be called only once, the first time the user clicks in the Suggestion widget
     * Then, when the user enters something in the widget, filtering is done on the existing, prefetched values: _No new request is sent to `demo.nuxeo.com`_.
@@ -36,26 +38,43 @@ The class is commented, so you should find explanations in the code, but there i
 * Spend time checking the webservice you need to call, and look at the result it returns:
   * Deduce the URL to call
   * Deduce the mapping that must be done
+  * In our example, the JSON returned by the query contains an `entries` property, which is an array of documents. Our custom class extracts this property. Then, for each document, we have `uid` and `title`:
+```
+{
+  "entity-type": "documents",
+  . . .
+  "entries": [ {
+      "entity-type": "document"
+      "repository": "default"
+      "uid": "2e668ca7-c7af-4489-9de3-045118688649"
+      "title": "The title"
+      . . .
+    },
+      . . .
+  ],
+  . . .
+}
+```
 
-* Create a class wich extends `JsonInMemoryDirectoryConnector`, and override the following methods:
-  * `extractResult(JsonNode responseAsJson)`: You must here return the node which contains an array of your results
+* Create a class wich extends `JsonInMemoryDirectoryConnector`, and overrides the following methods:
+  * `extractResult(JsonNode responseAsJson)`: You must here return the node which contains an array of your results (`"entries"` in our example)
   * `getEntryMap(String id)`: Because we are handling this example as a `vocabulary` schema, we must handle the `obsolete` field (see the example code)
   * `call(String url)`: If you need to tune the call. In the `NuxeoDemoComInMemoryConnector`, we add the `Authorization` header and the `pageSize` query parameter
   * `queryEntryIds(Map<String, Serializable> filter, Set<String> fulltext)`: This is the filter applied when the user enters values in the widget
 
-**NOTICE**: You dont' *need* tp override these methods, of course. If the default behavior feets you need, not problem :-)
+**NOTICE**: You dont' *need* to override all these methods, of course. If the default behavior fits your needs, no problem :-)
 
 ##### Using this Directory in a SuggestionWidget with Nuxeo Studio
 
 * Drag-drop a Directory Suggestion widget
-* Scroll the "Layout Widget Editor"
+* Scroll down the "Layout Widget Editor" that pops up
 * Click the "Custom properties configuration" to add a custom property
 * Enter "directoryName" as the key and the name of you directory as the value (in this example, "demoNuxeoComDocuments")
 * (save)
 
 That's all :-)
 
-(Like saying "that's all after spending quite sopme time building and explaining the thing :-) :-))
+(I like saying "that's all after spending quite some time building and explaining the thing :-) :-))
 
 ==========
 ==========
