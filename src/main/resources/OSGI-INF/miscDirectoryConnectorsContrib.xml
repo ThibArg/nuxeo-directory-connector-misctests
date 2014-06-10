@@ -7,6 +7,21 @@
   <extension
     target="org.nuxeo.directory.connector.ConnectorBasedDirectoryFactory"
     point="directories">
+    
+    
+    <directory name="demoNuxeoComDocumentsDynamic"
+      class="org.nuxeo.directory.connector.json.nuxeodemo.NuxeoDemoComDynamicConnector">
+      <idField>uid</idField>
+      <schema>vocabulary</schema>
+      <parameters>
+        <parameter name="url">http://demo.nuxeo.com/nuxeo/api/v1/</parameter>
+      </parameters>
+      <mapping>
+       <map field="label">title</map>
+       <map field="id">uid</map>
+      </mapping>
+    </directory>
+    
 
 
   	<!-- The "nasaCategories" directory
@@ -64,7 +79,7 @@
       <idField>uid</idField>
       <schema>vocabulary</schema>
       <parameters>
-        <parameter name="url">http://demo.nuxeo.com/nuxeo/site/api/v1/path///@search?fullText=nuxeo</parameter>
+        <parameter name="url">http://demo.nuxeo.com/nuxeo/api/v1/path///@search?fullText=nuxeo</parameter>
       </parameters>
       <mapping>
        <map field="label">title</map>
