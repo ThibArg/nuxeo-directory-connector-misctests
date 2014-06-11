@@ -1,3 +1,20 @@
+/*
+ * (C) Copyright 2014 Nuxeo SA (http://nuxeo.com/) and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser General Public License
+ * (LGPL) version 2.1 which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/lgpl-2.1.html
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * Contributors:
+ *     Thibaud Arguillere (nuxeo)
+ */
+
 package org.nuxeo.directory.connector.json.nuxeodemo;
 
 import java.io.Serializable;
@@ -15,7 +32,15 @@ import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-/*
+/**
+ * @author Thibaud Arguillere
+ *
+ * @since 5.9.4
+ */
+/* [A lot of comments because this code is supposed to explain how
+ *  to build your own directory connector connecting to a webservice
+ *  that returns JSON data]
+ *
  * In this example, we connect to a hard coded REST URL, defined in
  * OSGI-INF/miscDirectoryConnectorsContrib.xml. This is why we are
  * using the JsonInMemoryDirectoryConnector. Basically what happens
@@ -52,7 +77,7 @@ public class NuxeoDemoComInMemoryConnector extends
     // Base64 for Administrator:Administrator
     private static String kAUTHORIZATION = "Basic QWRtaW5pc3RyYXRvcjpBZG1pbmlzdHJhdG9y";
     // Tune the pageSize
-    private static int kPAGE_SIZE = 50;
+    private static int kPAGE_SIZE = 200;
 
     @Override
     protected JsonNode call(String url) {
@@ -102,6 +127,14 @@ public class NuxeoDemoComInMemoryConnector extends
         List<String> ids = new ArrayList<String>();
 
         String valueToFind = "";
+        /* We receive "label", and not "title", because we configured the thing
+         * (miscDirectoryConnectorsContrib.xml) so Nuxeo thinks we are using a
+         * "standard" (from nuxeo standpoint) vocabulary. So, when the user
+         * enters a value in the box, it is put in a "label" field.
+         *
+         * On the other hand, the search itself is done on the received JSON
+         * so we will compare valueToFind against each "title" property.
+         */
         if(filter.containsKey("label")) {
             valueToFind = (String) filter.get("label");
             if(valueToFind != null) {
